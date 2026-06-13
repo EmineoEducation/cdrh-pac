@@ -196,7 +196,7 @@
         </div>
         <h1 class="login-title">PAC · CDRH</h1>
         <p class="login-sub">Chargé de Développement RH</p>
-        <span class="login-rncp">RNCP 38502</span>
+        <span class="login-rncp">RNCP 38438</span>
       </div>
       <div class="login-fields">
         <div class="field">
@@ -232,7 +232,7 @@
       <h1 class="portal-name">
         <span id="display-prenom">—</span> <span style="color:#fff;font-weight:300" id="display-nom">—</span>
       </h1>
-      <p class="portal-desc">Sélectionne un bloc pour démarrer ou reprendre ton affaire · CDRH RNCP 38502</p>
+      <p class="portal-desc">Sélectionne un bloc pour démarrer ou reprendre ton affaire · CDRH RNCP 38438</p>
     </header>
     <div id="blocs-container" class="loading-blocs">
       <div class="spinner"></div>
@@ -345,11 +345,16 @@
       container.className = 'blocs-grid';
       container.innerHTML = '';
 
+      const _p = sessionStorage.getItem('pac_cdrh_prenom') || '';
+      const _n = sessionStorage.getItem('pac_cdrh_nom') || '';
+      const _e = sessionStorage.getItem('pac_cdrh_email') || '';
+
       BLOCS.forEach(bloc => {
         const done = studentProgress[bloc.id] === 'completed';
         const card = document.createElement('a');
         card.className = 'bloc-card' + (done ? ' bloc-card--done' : '');
-        card.href = done ? '#' : bloc.url;
+        const _params = `?p=${encodeURIComponent(_p)}&n=${encodeURIComponent(_n)}&e=${encodeURIComponent(_e)}`;
+        card.href = done ? '#' : `${bloc.url}${_params}`;
         if (!done) { card.target = '_blank'; card.rel = 'noopener noreferrer'; }
 
         card.innerHTML = `
