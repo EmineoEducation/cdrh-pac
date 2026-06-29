@@ -263,6 +263,16 @@ body {
       <div class="field">
         <label>Email école</label>
         <input type="email" id="input-email" placeholder="prenom.nom@emineo.fr" autocomplete="email"/>
+      <div class="field">
+        <label>Campus</label>
+        <select id="input-campus" style="width:100%;padding:14px 16px;border-radius:8px;border:1px solid rgba(93,226,152,0.15);background:rgba(11,43,45,0.6);color:white;font-size:15px;font-family:inherit;outline:none;appearance:none;cursor:pointer">
+          <option value="">— Choisir un campus —</option>
+          <option value="paris">Paris</option>
+          <option value="nantes">Nantes</option>
+          <option value="bordeaux">Bordeaux</option>
+          <option value="le mans">Le Mans</option>
+        </select>
+      </div>
       </div>
       <div class="error-msg" id="error-msg">Le prénom est requis.</div>
       <button class="btn-submit" id="btn-enter">Accéder à mes blocs →</button>
@@ -345,6 +355,8 @@ async function loadProgress(email) {
   } catch(e) { return {}; }
 }
 
+let _student = { prenom: '', nom: '', email: '', campus: '' };
+
 function renderBlocs(progress) {
   const grid = document.getElementById('blocs-grid');
   grid.innerHTML = '';
@@ -353,7 +365,10 @@ function renderBlocs(progress) {
     const isCompleted = st === 'completed';
     const card = document.createElement('div');
     card.className = 'bloc-card ' + (isCompleted ? 'completed' : 'available');
-    if (!isCompleted) card.addEventListener('click', () => { window.location.href = b.url; });
+    if (!isCompleted) card.addEventListener('click', () => {
+      const params = new URLSearchParams({ p: _student.prenom, n: _student.nom, e: _student.email, c: _student.campus });
+      window.location.href = b.url + '?' + params.toString();
+    });
     card.innerHTML = `
       <div class="bloc-header">
         <div class="bloc-num">${b.num}</div>
@@ -390,9 +405,12 @@ async function handleEnter() {
   const prenom = inputPre.value.trim();
   const nom    = inputNom.value.trim();
   const email  = inputEmail.value.trim();
+  const campus = document.getElementById('input-campus').value;
   if (!prenom) { showError('Le prénom est requis.'); inputPre.focus(); return; }
   if (!email || !email.includes('@')) { showError('Un email valide est requis.'); inputEmail.focus(); return; }
+  if (!campus) { showError('Le campus est requis.'); document.getElementById('input-campus').focus(); return; }
   errorMsg.classList.remove('visible');
+  _student = { prenom, nom, email, campus };
   btnEnter.textContent = 'Chargement…';
   btnEnter.disabled = true;
   const progress = await loadProgress(email);
