@@ -367,7 +367,7 @@ function renderBlocs(progress) {
     card.className = 'bloc-card ' + (isCompleted ? 'completed' : 'available');
     if (!isCompleted) card.addEventListener('click', () => {
       const params = new URLSearchParams({ p: _student.prenom, n: _student.nom, e: _student.email, c: _student.campus });
-      window.location.href = b.url + '?' + params.toString();
+      window.open(b.url + '?' + params.toString(), '_blank');
     });
     card.innerHTML = `
       <div class="bloc-header">
